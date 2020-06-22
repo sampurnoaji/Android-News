@@ -1,21 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="id.petersam.news.ui.home.HomeViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rootView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".HomeFragment">
+        android:background="@color/background_grey"
+        tools:context=".ui.home.HomeFragment">
 
-        <Button
-            android:id="@+id/btn"
+        <ProgressBar
+            android:id="@+id/loadingNewsList"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="go detail" />
+            app:isNetworkError="@{safeUnbox(viewModel.eventNetworkError)}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:newsList="@{viewModel.newsList}" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/newsRv"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/item_list_news" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

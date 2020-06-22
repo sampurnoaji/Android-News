@@ -46,5 +46,5 @@ object NewsNetwork {
         .client(client)
         .build()
 
-    val newsService = retrofit.create(NewsApiService::class.java)
+    val newsService: NewsApiService = retrofit.create(NewsApiService::class.java)
 }

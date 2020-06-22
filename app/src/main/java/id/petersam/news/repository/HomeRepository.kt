@@ -11,7 +11,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
 
-class NewsRepository(private val database: NewsDatabase) {
+class HomeRepository(private val database: NewsDatabase) {
     suspend fun refreshNewsList() {
         withContext(Dispatchers.IO) {
             Timber.d("refresh news list")

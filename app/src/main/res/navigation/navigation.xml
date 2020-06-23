@@ -18,5 +18,9 @@
         android:id="@+id/detailFragment"
         android:name="id.petersam.news.ui.detail.DetailFragment"
         android:label="fragment_detail"
-        tools:layout="@layout/fragment_detail" />
+        tools:layout="@layout/fragment_detail" >
+        <argument
+            android:name="selectedNews"
+            app:argType="id.petersam.news.domain.News" />
+    </fragment>
 </navigation>

@@ -1,8 +1,11 @@
 package id.petersam.news.ui.home
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import id.petersam.news.database.getDatabase
+import id.petersam.news.domain.News
 import id.petersam.news.repository.HomeRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -10,7 +13,7 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.io.IOException
 
-class HomeViewModel(application: Application) : AndroidViewModel(application) {
+class HomeViewModel(application: Application) : ViewModel() {
 
     private val viewModelJob = SupervisorJob()
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -25,6 +28,10 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     private var _isNetworkErrorShown = MutableLiveData<Boolean>(false)
     val isNetworkErrorShown: LiveData<Boolean>
         get() = _isNetworkErrorShown
+
+    private val _navigateToSelectedNews = MutableLiveData<News>()
+    val navigateToSelectedNews: LiveData<News>
+        get() = _navigateToSelectedNews
 
     init {
         refreshDataFromRepository()
@@ -45,18 +52,16 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
         _isNetworkErrorShown.value = true
     }
 
+    fun navigateToNewsDetail(news: News) {
+        _navigateToSelectedNews.value = news
+    }
+
+    fun onNewsDetailNavigated() {
+        _navigateToSelectedNews.value = null
+    }
+
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
-    }
-
-    class Factory(val application: Application) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(HomeViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return HomeViewModel(application) as T
-            }
-            throw IllegalArgumentException("Unable to construct viewmodel")
-        }
     }
 }

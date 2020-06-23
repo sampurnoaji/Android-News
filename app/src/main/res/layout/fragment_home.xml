@@ -32,6 +32,11 @@
             android:id="@+id/newsRv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:newsListData="@{viewModel.newsList}"
             tools:listitem="@layout/item_list_news" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

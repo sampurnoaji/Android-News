@@ -2,43 +2,48 @@ package id.petersam.news.ui.home
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.annotation.LayoutRes
-import androidx.databinding.DataBindingUtil
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import id.petersam.news.R
 import id.petersam.news.databinding.ItemListNewsBinding
 import id.petersam.news.domain.News
 
-class NewsListAdapter : RecyclerView.Adapter<NewsListAdapter.NewsViewHolder>() {
-
-    var newsList: List<News> = emptyList()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+class NewsListAdapter(
+    private val listener: NewsListListener
+) : ListAdapter<News, NewsListAdapter.NewsViewHolder>(DiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
-        val binding: ItemListNewsBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(parent.context),
-            NewsViewHolder.LAYOUT,
-            parent,
-            false
-        )
-        return NewsViewHolder(binding)
+        return NewsViewHolder(ItemListNewsBinding.inflate(LayoutInflater.from(parent.context), parent, false))
     }
-
-    override fun getItemCount() = newsList.size
 
     override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
-        holder.binding.also {
-            it.news = newsList[position]
+        val news = getItem(position)
+        holder.itemView.setOnClickListener {
+            listener.onClick(news)
+        }
+        holder.bind(news)
+    }
+
+    companion object DiffCallback : DiffUtil.ItemCallback<News>() {
+        override fun areItemsTheSame(oldItem: News, newItem: News): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: News, newItem: News): Boolean {
+            return oldItem.publishedAt == newItem.publishedAt
+        }
+
+    }
+
+    class NewsViewHolder(private val binding: ItemListNewsBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(news: News) {
+            binding.news = news
+            binding.executePendingBindings()
         }
     }
 
-    class NewsViewHolder(val binding: ItemListNewsBinding) : RecyclerView.ViewHolder(binding.root) {
-        companion object {
-            @LayoutRes
-            val LAYOUT = R.layout.item_list_news
-        }
+    class NewsListListener(val listener: (news: News) -> Unit) {
+        fun onClick(news: News) = listener(news)
     }
 }

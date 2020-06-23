@@ -1,7 +1,10 @@
 package id.petersam.news.domain
 
+import android.os.Parcelable
 import id.petersam.news.util.smartTruncate
+import kotlinx.android.parcel.Parcelize
 
+@Parcelize
 data class News(
     val author: String,
     val title: String,
@@ -10,7 +13,7 @@ data class News(
     val urlToImage: String,
     val publishedAt: String,
     val content: String
-) {
+): Parcelable {
     val shortDescription: String
         get() = description.smartTruncate(200)
 }

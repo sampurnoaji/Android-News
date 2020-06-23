@@ -7,7 +7,9 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import id.petersam.news.R
@@ -26,20 +28,11 @@ class HomeFragment : Fragment() {
         val activity = requireNotNull(this.activity) {
             "You can only access the viewModel after onActivityCreated()"
         }
-        ViewModelProviders.of(this, HomeViewModel.Factory(activity.application))
+        ViewModelProvider(this, HomeViewModelFactory(activity.application))
             .get(HomeViewModel::class.java)
     }
 
     private var newsListAdapter: NewsListAdapter? = null
-
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-        viewModel.newsList.observe(viewLifecycleOwner, Observer {
-            it?.apply {
-                newsListAdapter?.newsList = it
-            }
-        })
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -52,7 +45,9 @@ class HomeFragment : Fragment() {
         binding.lifecycleOwner = viewLifecycleOwner
         binding.viewModel = viewModel
 
-        newsListAdapter = NewsListAdapter()
+        newsListAdapter = NewsListAdapter(NewsListAdapter.NewsListListener {
+            viewModel.navigateToNewsDetail(it)
+        })
 
         binding.root.findViewById<RecyclerView>(R.id.newsRv).apply {
             layoutManager = LinearLayoutManager(context)
@@ -61,6 +56,13 @@ class HomeFragment : Fragment() {
 
         viewModel.eventNetworkError.observe(viewLifecycleOwner, Observer { isNetworkError ->
             if (isNetworkError) onNetworkError()
+        })
+
+        viewModel.navigateToSelectedNews.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                this.findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToDetailFragment(it))
+                viewModel.onNewsDetailNavigated()
+            }
         })
 
         return binding.root

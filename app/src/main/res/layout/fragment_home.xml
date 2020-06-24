@@ -14,8 +14,53 @@
         android:id="@+id/rootView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background_grey"
+        android:background="@android:color/white"
         tools:context=".ui.home.HomeFragment">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chip_group"
+            style="@style/Widget.MaterialComponents.Chip.Choice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:singleLine="true"
+            app:singleSelection="true">
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:tag="id"
+                android:text="@string/indonesia"
+                app:checkedIconEnabled="true" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:tag="jp"
+                android:text="@string/japan"
+                app:checkedIconEnabled="true" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:tag="uk"
+                android:text="@string/united_kingdom"
+                app:checkedIconEnabled="true" />
+
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checkable="true"
+                android:tag="kr"
+                android:text="@string/korea"
+                app:checkedIconEnabled="true" />
+        </com.google.android.material.chip.ChipGroup>
 
         <ProgressBar
             android:id="@+id/loadingNewsList"
@@ -31,11 +76,11 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/newsRv"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/chip_group"
             app:newsListData="@{viewModel.newsList}"
             tools:listitem="@layout/item_list_news" />
 

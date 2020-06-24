@@ -2,6 +2,7 @@ package id.petersam.news.util
 
 import android.view.View
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.databinding.BindingAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -26,4 +27,11 @@ fun setImageUrl(imageView: ImageView, url: String) {
 fun bindNewsRecyclerView(recyclerView: RecyclerView, data: List<News>?) {
     val adapter = recyclerView.adapter as NewsListAdapter
     adapter.submitList(data)
+}
+
+@BindingAdapter("newsDateFormatted")
+fun TextView.setNewsDateFormatted(item: News?) {
+    item?.let {
+        text = item.publishedAt.convertDateToFormatted()
+    }
 }

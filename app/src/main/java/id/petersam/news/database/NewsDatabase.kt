@@ -1,17 +1,9 @@
 package id.petersam.news.database
 
 import android.content.Context
-import androidx.lifecycle.LiveData
-import androidx.room.*
-
-@Dao
-interface NewsDao {
-    @Query("SELECT * FROM NewsEntity")
-    fun getNewsList(): LiveData<List<NewsEntity>>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(newsList: List<NewsEntity>)
-}
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
 
 @Database(entities = [NewsEntity::class], version = 1)
 abstract class NewsDatabase : RoomDatabase() {

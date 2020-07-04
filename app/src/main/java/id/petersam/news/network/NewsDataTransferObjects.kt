@@ -16,8 +16,18 @@ data class NetworkNews(
     val url: String? = null,
     val urlToImage: String? = null,
     val publishedAt: String? = null,
-    val content: String? = null
-)
+    val content: String? = null,
+    @Json(name = "source")
+    val source: Source? = null
+) {
+    @JsonClass(generateAdapter = true)
+    data class Source(
+        @Json(name = "id")
+        val sourceId: String? = null,
+        @Json(name = "name")
+        val sourceName: String? = null
+    )
+}
 
 fun NewsDataTransferObjects.asDomainModel(): List<News> {
     return newsList.map {
@@ -28,7 +38,9 @@ fun NewsDataTransferObjects.asDomainModel(): List<News> {
             url = it.url ?: "",
             urlToImage = it.urlToImage ?: "",
             publishedAt = it.publishedAt ?: "",
-            content = it.content ?: ""
+            content = it.content ?: "",
+            sourceId = it.source?.sourceId ?: "",
+            sourceName = it.source?.sourceName ?: ""
         )
     }
 }
@@ -42,7 +54,9 @@ fun NewsDataTransferObjects.asDatabaseModel(): List<NewsEntity> {
             url = it.url ?: "",
             urlToImage = it.urlToImage ?: "",
             publishedAt = it.publishedAt ?: "",
-            content = it.content ?: ""
+            content = it.content ?: "",
+            sourceId = it.source?.sourceId ?: "",
+            sourceName = it.source?.sourceName ?: ""
         )
     }
 }

@@ -13,7 +13,9 @@ data class NewsEntity constructor(
     val urlToImage: String,
     @PrimaryKey
     val publishedAt: String,
-    val content: String
+    val content: String,
+    val sourceId: String,
+    val sourceName: String
 )
 
 fun List<NewsEntity>.asDomainModel(): List<News> {
@@ -25,7 +27,9 @@ fun List<NewsEntity>.asDomainModel(): List<News> {
             url = it.url,
             urlToImage = it.urlToImage,
             publishedAt = it.publishedAt,
-            content = it.content
+            content = it.content,
+            sourceId = it.sourceId,
+            sourceName = it.sourceName
         )
     }
 }

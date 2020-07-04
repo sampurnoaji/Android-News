@@ -12,8 +12,10 @@ data class News(
     val url: String,
     val urlToImage: String,
     val publishedAt: String,
-    val content: String
-): Parcelable {
+    val content: String,
+    val sourceId: String,
+    val sourceName: String
+) : Parcelable {
     val shortDescription: String
         get() = description.smartTruncate(200)
 }

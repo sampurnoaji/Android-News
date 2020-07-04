@@ -68,7 +68,7 @@ class HomeFragment : Fragment() {
 
         binding.chipGroup.setOnCheckedChangeListener { group, checkedId ->
             val chip = group.findViewById<Chip>(checkedId)
-            rootView.showSnackBar(chip.tag as String)
+            chip?.let { rootView.showSnackBar(chip.tag as String) }
         }
 
         return binding.root

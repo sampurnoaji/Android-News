@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         navController = this.findNavController(R.id.myNavHostFragment)
+        navController.setGraph(R.navigation.navigation)
         NavigationUI.setupActionBarWithNavController(this, navController)
     }
 

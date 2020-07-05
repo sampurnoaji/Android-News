@@ -19,7 +19,9 @@ class HomeViewModel(application: Application) : ViewModel() {
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
     private val homeRepository = HomeRepository(getDatabase(application))
 
-    val newsList = homeRepository.newsList
+    private var _newsList = MutableLiveData<LiveData<List<News>>>()
+    val newsList: LiveData<LiveData<List<News>>>
+        get() = _newsList
 
     private var _eventNetworkError = MutableLiveData<Boolean>(false)
     val eventNetworkError: LiveData<Boolean>
@@ -33,17 +35,24 @@ class HomeViewModel(application: Application) : ViewModel() {
     val navigateToSelectedNews: LiveData<News>
         get() = _navigateToSelectedNews
 
-    init {
-        refreshDataFromRepository()
+    companion object {
+        const val INDONESIAN_COUNTRY = "id"
     }
 
-    private fun refreshDataFromRepository() = viewModelScope.launch {
+    init {
+        refreshDataFromRepository(INDONESIAN_COUNTRY)
+    }
+
+    fun refreshDataFromRepository(country: String) = viewModelScope.launch {
         try {
-            homeRepository.refreshNewsList()
+            homeRepository.refreshNewsList(country)
+            _newsList.value = homeRepository.getNewsListByCountry(country)
 
             _eventNetworkError.value = false
             _isNetworkErrorShown.value = false
         } catch (networkError: IOException) {
+            _newsList.value = homeRepository.getNewsListByCountry(country)
+
             _eventNetworkError.value = true
         }
     }

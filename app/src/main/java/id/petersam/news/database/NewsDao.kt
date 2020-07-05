@@ -13,4 +13,7 @@ interface NewsDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(newsList: List<NewsEntity>)
+
+    @Query("SELECT * FROM NewsEntity WHERE :country LIKE country")
+    fun getNewsListByCountry(country: String): LiveData<List<NewsEntity>>
 }

@@ -12,15 +12,21 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class HomeRepository(private val database: NewsDatabase) {
-    suspend fun refreshNewsList() {
+    suspend fun refreshNewsList(country: String) {
         withContext(Dispatchers.IO) {
             Timber.d("refresh news list")
-            val dto = NewsNetwork.newsService.getTopHeadlinesAsync("us").await()
-            database.newsDao.insertAll(dto.asDatabaseModel())
+            val dto = NewsNetwork.newsService.getTopHeadlinesAsync(country).await()
+            database.newsDao.insertAll(dto.asDatabaseModel(country))
         }
     }
 
-    val newsList: LiveData<List<News>> = Transformations.map(database.newsDao.getNewsList()) {
-        it.asDomainModel()
+    suspend fun getNewsListByCountry(country: String): LiveData<List<News>> {
+        return withContext(Dispatchers.IO) {
+            val newsList: LiveData<List<News>> =
+                Transformations.map(database.newsDao.getNewsListByCountry(country)) {
+                    it.asDomainModel()
+                }
+            newsList
+        }
     }
 }

@@ -16,7 +16,6 @@ import id.petersam.news.R
 import id.petersam.news.databinding.FragmentHomeBinding
 import id.petersam.news.util.showSnackBar
 import kotlinx.android.synthetic.main.fragment_home.*
-import timber.log.Timber
 
 /**
  * A simple [Fragment] subclass.
@@ -67,6 +66,12 @@ class HomeFragment : Fragment() {
             }
         })
 
+        handleOnChipClicked()
+
+        return binding.root
+    }
+
+    private fun handleOnChipClicked() {
         var lastCheckedId = binding.chipId.id
         binding.chipGroup.setOnCheckedChangeListener { group, checkedId ->
             group.findViewById<Chip>(lastCheckedId).isEnabled = true
@@ -78,10 +83,8 @@ class HomeFragment : Fragment() {
             lastCheckedId = checkedId
             val chip = group.findViewById<Chip>(lastCheckedId)
             chip.isEnabled = false
-            Timber.d(chip.tag.toString())
+            viewModel.refreshDataFromRepository(chip.tag.toString())
         }
-
-        return binding.root
     }
 
     private fun onNetworkError() {

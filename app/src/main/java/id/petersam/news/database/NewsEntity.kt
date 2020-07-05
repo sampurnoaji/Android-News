@@ -6,6 +6,7 @@ import id.petersam.news.domain.News
 
 @Entity
 data class NewsEntity constructor(
+    val country: String,
     val author: String,
     val title: String,
     val description: String,

@@ -3,7 +3,6 @@ package id.petersam.news.network
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import id.petersam.news.database.NewsEntity
-import id.petersam.news.domain.News
 
 @JsonClass(generateAdapter = true)
 data class NewsDataTransferObjects(@Json(name = "articles") val newsList: List<NetworkNews>)
@@ -29,25 +28,10 @@ data class NetworkNews(
     )
 }
 
-fun NewsDataTransferObjects.asDomainModel(): List<News> {
-    return newsList.map {
-        News(
-            author = it.author ?: "",
-            title = it.title ?: "",
-            description = it.description ?: "",
-            url = it.url ?: "",
-            urlToImage = it.urlToImage ?: "",
-            publishedAt = it.publishedAt ?: "",
-            content = it.content ?: "",
-            sourceId = it.source?.sourceId ?: "",
-            sourceName = it.source?.sourceName ?: ""
-        )
-    }
-}
-
-fun NewsDataTransferObjects.asDatabaseModel(): List<NewsEntity> {
+fun NewsDataTransferObjects.asDatabaseModel(country: String): List<NewsEntity> {
     return newsList.map {
         NewsEntity(
+            country = country,
             author = it.author ?: "",
             title = it.title ?: "",
             description = it.description ?: "",
